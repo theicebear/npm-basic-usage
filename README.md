@@ -2,6 +2,44 @@
 
 # npm 基本用法和实用技巧
 
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:0 orderedList:0 -->
+
+- [基本用法](#基本用法)
+  - [安装与升级](#安装与升级)
+    - [安装](#安装)
+    - [升级](#升级)
+    - [安装指定版本的 npm](#安装指定版本的-npm)
+  - [常用命令](#常用命令)
+    - [npm install](#npm-install)
+    - [npm uninstall](#npm-uninstall)
+    - [npm update](#npm-update)
+    - [npm ls](#npm-ls)
+    - [npm adduser](#npm-adduser)
+    - [npm init](#npm-init)
+    - [npm publish](#npm-publish)
+    - [npm unpublish](#npm-unpublish)
+    - [npm deprecate](#npm-deprecate)
+    - [npm dist-tag](#npm-dist-tag)
+    - [npm view](#npm-view)
+    - [npm link](#npm-link)
+    - [npm conifg](#npm-conifg)
+- [工作原理](#工作原理)
+- [实用技巧](#实用技巧)
+  - [pacakge.json](#pacakgejson)
+    - [dependencies](#dependencies)
+    - [optionalDependencies](#optionaldependencies)
+    - [peerDependencies](#peerdependencies)
+    - [bundledDependencies](#bundleddependencies)
+    - [bin](#bin)
+    - [config](#config)
+  - [.npmrc](#npmrc)
+  - [.npmignore](#npmignore)
+  - [scripts](#scripts)
+  - [shrinkwrap](#shrinkwrap)
+  - [cache](#cache)
+
+<!-- /TOC -->
+
 ## 基本用法
 
 ### 安装与升级
@@ -11,7 +49,7 @@
 安装 Node.js 时会自动安装 npm。
 
 ```
-curl -Ls -o- http://build.sankuai.com/nvm/install | bash
+nvm install 4
 ```
 
 #### 升级
@@ -72,7 +110,7 @@ npm install npm@2 -g
 6. 常用参数：
 
     - `-g, --global`：安装全局依赖，如果没有指定依赖包名，则将当前目录中的包安装至全局
-    
+
     - `-S, --save`：安装依赖的同时将该依赖写入 `dependencies`
     - `-D, --save-dev`：安装依赖的同时将该依赖写入 `devDependencies`
     - `-O, --save-optional`：安装依赖的同时将该依赖写入 `optionalDependencies`
@@ -91,10 +129,10 @@ npm install npm@2 -g
     ```
     npm uninstall [<@scope>/]<pkg>[@<version>]... [-S|--save|-D|--save-dev|-O|--save-optional]
     ```
-    
+
 2. 常用参数：与 `npm install` 类似
 
-3. 别名：`remove`, `rm`, `r`, `un`, `unlink`
+3. 别名：`remove`、`rm`、`r`、`un`、`unlink`
 
 #### npm update
 
@@ -103,7 +141,7 @@ npm install npm@2 -g
     ```
     npm update [<pkg>...]
     ```
-    
+
 2. 常用参数：
 
     - `-g`：升级全局依赖包
@@ -111,7 +149,7 @@ npm install npm@2 -g
     - `--depth Infinity`：从 `npm@2.6.1` 起 `npm update` 默认仅升级顶层依赖，使用该参数升级所有依赖包
     - `--save`：升级依赖包，同时记录升级后的版本
 
-3. 别名：`up`, `upgrade`    
+3. 别名：`up`、`upgrade`
 
 #### npm ls
 
@@ -130,7 +168,7 @@ npm install npm@2 -g
     - `--prod[uction]`：仅输出 `dependencies` 中的依赖
     - `--dev`：仅输出 `devDependencies` 中的依赖
 
-3. 别名：`list`, `la`, `ll`
+3. 别名：`list`、`la`、`ll`
 
 #### npm adduser
 
@@ -147,7 +185,7 @@ npm adduser
     ```
     npm init [-f|--force|-y|--yes]
     ```
-    
+
 2. 常用参数：
 
     - `-f, --force, -y, --yes`：使用默认的答案，不再提问
@@ -160,9 +198,9 @@ npm adduser
     ```
     npm publish [<tarball>|<folder>] [--tag <tag>] [--access <public|restricted>]
     ```
-    
+
     > 如果没有 tarball 或 folder 被指定，则使用当前目录
-    
+
 2. 常用参数：
 
     - `--tag <tag>`：给被发布的包注册指定的 tag，如果没有该参数，则默认使用 `latest`
@@ -190,19 +228,19 @@ npm deprecate <pkg>[@<version>] <message>
     ```
     npm dist-tag add <pkg>@<version> [<tag>]
     ```
-    
+
 2. 移除一个 tag
 
     ```
     npm dist-tag rm <pkg> <tag>
     ```
-    
+
 3. 显示指定包的所有 tag
 
     ```
     npm dist-tag ls [<pkg>]
     ```
-    
+
 #### npm view
 
 1. 显示一个包的详细信息
@@ -210,10 +248,10 @@ npm deprecate <pkg>[@<version>] <message>
     ```
     npm view [<@scope>/]<name>[@<version>] [<field>[.<subfield>]...]
     ```
-    
+
     > `<field>` 和 `<subfield>` 表示输出信息中的字段
-    
-2. 别名：`info`, `show`, `v`
+
+2. 别名：`info`、`show`、`v`
 
 #### npm link
 
@@ -224,27 +262,27 @@ npm deprecate <pkg>[@<version>] <message>
     ```
     npm link
     ```
-    
+
     ```
-    /usr/local/Cellar/nvm/0.25.4/versions/node/v4.4.4/lib/node_modules/handgrip 
+    /usr/local/Cellar/nvm/0.25.4/versions/node/v4.4.4/lib/node_modules/handgrip
     -> /Users/Dylan/handgrip
     ```
-    
+
 2. 在其他目录中执行下面的命令，创建一个从局部依赖指向全局依赖的符号链接
 
     ```
     npm link [<@scope>/]<pkg>[@<version>]
     ```
-    
+
     > `[<@scope>/]<pkg>[@<version>]` 所表示已经执行了第一步的模块，或其所包含的版本
-    
+
     ```
     # npm link handgrip
-    /Users/Dylan/koalition-boilerplate/node_modules/handgrip 
-    -> /usr/local/Cellar/nvm/0.25.4/versions/node/v4.4.4/lib/node_modules/handgrip 
-    -> /Users/Dylan/handgrip    
+    /Users/Dylan/koalition-boilerplate/node_modules/handgrip
+    -> /usr/local/Cellar/nvm/0.25.4/versions/node/v4.4.4/lib/node_modules/handgrip
+    -> /Users/Dylan/handgrip
     ```
-    
+
 由于依赖通过符号链接的方式组织，在模块目录中的修改可以立即在其他目录中生效。  
 
 #### npm conifg
@@ -255,34 +293,34 @@ npm deprecate <pkg>[@<version>] <message>
     npm config set <key> <value> [-g|--global]
     npm set <key> <value> [-g|--global]
     ```  
-    
+
     如果配置项的值阙如，将采用默认值 `true`。
-    
+
 2. 读取一个配置项
 
     ```
     npm config get <key>
     npm get <key>
-    ```    
-    
+    ```
+
 3. 删除一个配置项
 
     ```
     npm config delete key
     ```
-    
+
 4. 列出所有的配置
 
     ```
     npm config list
     ```  
-    
+
 5. 在编辑器中打开配置文件
 
     ```
     npm config edit
     ```  
-    
+
     使用 `--global` 来打开全局配置文件。
 
 ## 工作原理
@@ -295,7 +333,7 @@ npm v3 依赖解析的主要思想：尽可能地减少间接依赖安装目录�
 
 假如我们有模块 A，模块 A 依赖了模块 B。
 
-![模块 A 依赖模块 B](https://docs.npmjs.com/images/npm3deps1.png)
+![模块 A 依赖模块 B](https://docs.npmjs.com/images/npm3deps1.png)
 
 然后我们创建了已依赖模块 A 的应用 App。
 
@@ -354,7 +392,7 @@ npm v3 依赖解析的主要思想：尽可能地减少间接依赖安装目录�
 3. 保留模块 B v1.0，因为模块 E 仍旧依赖它
 4. 由于模块 B v1.0 还在顶层依赖目录中，模块 B v2.0 被嵌套安装在模块 A v2.0 中
 
-![](https://docs.npmjs.com/images/npm3deps10.png)
+![](https://docs.npmjs.com/images/npm3deps10.png)
 
 在控制台打印出依赖树和目录树。
 
@@ -397,7 +435,7 @@ npm dedupe
 
 在这个🌰中，我们的应用有以下 `package.json` 文件：
 
-```json
+```js
 {
   "name": "example3",
   "version": "1.0.0",
@@ -438,7 +476,7 @@ npm install mod-a@2 --save
 
 而且我们得到了一个新的 `package.json`：
 
-```json
+```js
 {
   "name": "example3",
   "version": "1.0.0",
@@ -480,7 +518,7 @@ npm install
 1. 依赖目录的结构取决于依赖安装的顺序
 
     ![](https://docs.npmjs.com/images/install-order.png)
-    
+
 2. `npm install` （不带参数）安装出的依赖目录结构是稳定的，因为 `package.json` 中依赖的排列顺序总是字典序
 3. npm v3 需要尽可能的减少间接依赖安装目录的深度，于是不得不从树根至树叶一级一级遍历下来，寻找可用的最远祖先节点，严重延长了依赖的安装时间
 
@@ -494,14 +532,14 @@ npm install
 
 - `version`: 必须匹配确切的版本号
 - `>version`、`>=version`、`<version`、`<=version`
-- `~version`：如果 mirror 级的版本被确定的话，允许 patch 级的版本变化；否则允许 morror 级版本变化
-    - `~1.2.3` := `>=1.2.3 <1.3.0` 
+- `~version`：如果 minor 级的版本被确定的话，允许 patch 级的版本变化；否则允许 minor 级版本变化
+    - `~1.2.3` := `>=1.2.3 <1.3.0`
     - `~1.2` := `>=1.2.0 <1.3.0`
     - `~1` := `>=1.0.0 <2.0.0`
     - `~0.2.3` := `>=0.2.3 <0.3.0`
     - `~0` := `>=0.0.0 <1.0.0`
     - `~1.2.3-beta.2` := `>=1.2.3-beta.2 <1.3.0`
-- `^version`：允许版本号中不修改最左非零位及其前缀的所有变化
+- `^version`：允许版本号中不修改最左非零位及其前缀的所有版本号更高的变化
     - `^1.2.3` := `>=1.2.3 <2.0.0`
     - `^0.2.3` := `>=0.2.3 <0.3.0`
     - `^0.0.3` := `>=0.0.3 <0.0.4`
@@ -555,7 +593,7 @@ if (foo) {
 
 🌰如：
 
-```json
+```js
 {
   "name": "tea-latte",
   "version": "1.3.5",
@@ -594,13 +632,13 @@ if (foo) {
 
 🌰：
 
-```json
+```js
 { "bin" : { "myapp" : "./cli.js" } }
 ```
 
 当安装这个模块时，npm 会创建一个指向 `cli.js` 的符号链接。
 
-```json
+```js
 { "name": "my-program",
   "version": "1.2.5",
   "bin": "./path/to/program" }
@@ -608,11 +646,26 @@ if (foo) {
 
 上面的写法等价于：
 
-```json
+```js
 { "name": "my-program",
   "version": "1.2.5",
   "bin" : { "my-program" : "./path/to/program" } }
 ```
+
+#### config
+
+`package.json` 文件中的 `config` 字段可以用来设置模块脚本中可以用到的配置参数。
+
+🌰，如果一个模块有：
+
+```js
+{ "name" : "foo",
+  "config" : { "port" : "8080" } }
+```
+
+那么在模块脚本（如 `start`）中就可以通过 `process.env.npm_package_config_port`，访问到这个配置。
+
+这个配置也可以被命令 `npm config set foo:port 8001` 覆盖。
 
 ### .npmrc
 
@@ -643,6 +696,8 @@ key[] = "second value"
 常用配置项：
 
 - `cache`：npm 本地缓存目录，默认 `~/.npm`
+- `cache-max`：保持缓存项目且不向 registry 检查的最长时间，单位秒，默认 `Infinity`，缓存中的数据不会自动删除除非执行 `npm cache clean` 命令
+- `cache-min`：保持缓存项目且不向 registry 检查的最短时间，单位秒，默认 `10`，可以置为 `999999` 等以尽量延长缓存生效时间
 - `depth`：`npm ls` 等命令中的默认深度，默认 `Infinity`
 - `editor`：npm 默认使用的编辑器
 - `engine-strict`：如果置为 `true`，npm 将会拒绝安装不符合当前 Node.js 版本的模块
@@ -676,7 +731,9 @@ key[] = "second value"
 - `rollback`：移除安装失败的模块
 - `save`：与命令中的 `--save` 效果类似
 - `scope`：与命令中的 `--scope` 效果类似
-- `shrinkwrap`：如果置为 `false`, 安装时忽略 `npm-shrinkwrap.json`
+- `shrinkwrap`：如果置为 `false`，安装时忽略 `npm-shrinkwrap.json`
+- `progress`：如果置为 `false`，不显示进度条
+- `loglevel`：设置输出日志的 level，置为 `silly` 可以显示全部日志
 
 ### .npmignore
 
@@ -706,6 +763,25 @@ key[] = "second value"
 - `CHANGELOG`（及其变体）
 - `LICENSE`、`LICENCE`
 
+### scripts
+
+npm 支持的生命周期脚本有：
+
+- `prepublish`: 发布模块之前执行，也在不带任何参数的局部 `npm install` 之前执行
+- `publish`、`postpublish`: 发布模块之后执行
+- `preinstall`: 安装该模块之前执行
+- `install`、`postinstall`: 安装该模块之后执行
+- `preuninstall`、`uninstall`: 移除该模块之前执行
+- `postuninstall`: 移除该模块之后执行
+- `preversion`、`version`: 修改模块版本号之前执行
+- `postversion`: 修改模块版本号之后执行
+- `pretest`、`test`、`posttest`: 在 `test` 命令的前后执行
+- `prestop`、`stop`、`poststop`: 在 `stop` 命令的前后执行
+- `prestart`、`start`、`poststart`: 在 `start` 命令的前后执行.
+- `prerestart`、`restart`、`postrestart`: 在 `restart` 命令的前后执行，如果 `restart` 脚本没有提供，`restart` 命令将会执行 `stop` 脚本再执行 `start` 脚本
+
+对于自定义名称的脚本，可以通过 `npm run-script <pkg> <stage>` 来执行，匹配名称的 *pre* 和 *post* 命令同样也会执行。
+
 ### shrinkwrap
 
 `npm shrinkwrap` 可以用来锁定依赖的版本号。
@@ -714,7 +790,7 @@ key[] = "second value"
 
 1. 我们有模块 A：
 
-    ```json
+    ```js
     {
       "name": "A",
       "version": "0.0.1",
@@ -723,10 +799,10 @@ key[] = "second value"
       }
     }
     ```
-    
+
     模块 B：
-    
-    ```json
+
+    ```js
     {
       "name": "B",
       "version": "0.0.1",
@@ -735,24 +811,24 @@ key[] = "second value"
       }
     }
     ```
-    
+
     和模块 C：
-    
-    ```json
+
+    ```js
     {
       "name": "C",
       "version": "0.0.1"
     }
     ```
-    
+
     这三个模块都只有 0.0.1 这一个版本。此时运行 `npm install A`，将会得到：
-    
+
     ```
     A@0.0.1
     `-- B@0.0.1
         `-- C@0.0.1
     ```
-    
+
 2. 如果模块 B 发布了 0.0.2 版本，此时运行 `npm install A`，将会得到：
 
     ```
@@ -766,10 +842,10 @@ key[] = "second value"
     ```
     npm shrinkwrap
     ```
-    
+
     然后在项目目录下得到了一个 `npm-shrinkwrap.json` 文件：
-    
-    ```json
+
+    ```js
     {
       "name": "A",
       "version": "0.0.1",
@@ -789,11 +865,11 @@ key[] = "second value"
       }
     }
     ```
-    
+
     `npm shrinkwrap` 命令根据当前目录中的 node_modules 目录锁定了依赖版本号，此时再运行 `npm install`，该命令的行为将变为：
-    
-    1. `npm-shrinkwrap.json` 中描述的依赖树将会被重新构造，如果一个依赖项中的 `resolved` 字段可用，则使用该字段获取依赖，否则使用 `version` 字段来获取依赖
-    2. `npm-shrinkwrap.json` 中缺失的依赖将会按照普通的方式来安装
+
+    1. 重新构造 `npm-shrinkwrap.json` 中描述的依赖树，如果一个依赖项中的 `resolved` 字段可用，则使用该字段获取依赖，否则使用 `version` 字段来获取依赖
+    2. 以普通的方式安装 `npm-shrinkwrap.json` 中缺失的依赖
 
 ***
 
@@ -804,17 +880,57 @@ key[] = "second value"
     ```
     npm install --save <pkg>
     ```
-    
+
 - 升级所有依赖包
 
     ```
     npm install --no-shrinkwrap
-    ```    
-   
+    ```
+
 注意事项：
 
 1. 如果 node_modules 目录中的依赖比 `package.json` 中定义的多或者少，`npm shrinkwrap` 命令将会失败
 2. `npm shrinkwrap` 命令不锁定 `devDependencies` 中依赖的版本，即 `npm-shrinkwrap.json` 中不包含开发依赖；如果希望锁定开发依赖的版本，则需要在运行命令时加上 `--dev` 参数
 3. shrinkwrap 不会继承，但一个模块的 shrinkwrap 隐含了它的依赖的 shrinkwrap
 
+### cache
 
+npm 将数据缓存在 `npm config get cache` 命令指定的路径中。
+
+当局部安装一个模块时，npm 会执行以下步骤：
+
+1. 检查缓存并检查缓存文件是否超过免检时间
+2. 如果存在合适的缓存文件且没有超过免检时间，执行步骤 6
+3. 获取该模块符合版本规则的最新版本
+4. 如果缓存中有最新版本，则执行步骤 6
+5. 下载该模块的最新版本，并将其载入缓存中
+6. 取缓存中的文件，并将其安装至目标路径中
+
+`npm cache` 命令的用法：
+
+1. 向缓存中添加指定的模块：
+
+    ```
+    npm cache add <tarball file>
+    npm cache add <folder>
+    npm cache add <tarball url>
+    npm cache add <name>@<version>
+    ```
+
+2. 显示缓存中的数据：
+
+    ```
+    npm cache ls [<path>]
+    ```
+
+3. 清空缓存：
+
+    ```
+    npm cache clean [<path>]
+    ```
+
+npm 缓存的改进方案：
+
+1. [local-npm](https://github.com/nolanlawson/local-npm)：一个本地 npm 镜像，但是仅缓存已经安装过的模块，没有网络时自动回退到本地
+
+2. [npm_lazy](https://github.com/mixu/npm_lazy)
