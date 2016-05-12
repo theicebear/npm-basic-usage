@@ -609,7 +609,7 @@ if (foo) {
 
 #### bundledDependencies
 
-`bundledDependencies` 表示在当前模块打包或发布时，需要被至于模块内部的依赖。
+`bundledDependencies` 表示在当前模块打包或发布时，需要被置于模块内部的依赖。
 
 使用的时机：
 
@@ -891,7 +891,7 @@ npm 支持的生命周期脚本有：
 
 1. 如果 node_modules 目录中的依赖比 `package.json` 中定义的多或者少，`npm shrinkwrap` 命令将会失败
 2. `npm shrinkwrap` 命令不锁定 `devDependencies` 中依赖的版本，即 `npm-shrinkwrap.json` 中不包含开发依赖；如果希望锁定开发依赖的版本，则需要在运行命令时加上 `--dev` 参数
-3. shrinkwrap 不会继承，但一个模块的 shrinkwrap 隐含了它的依赖的 shrinkwrap
+3. shrinkwrap 不会继承，即执行过程中不会访问依赖的 `npm-shrinkwrap.json` 文件；但是，依赖中如果有 `npm-shrinkwrap.json` 文件，在安装该依赖的时就会按照这个文件来安装相关的模块到 node_modules 目录中，如果没有 `npm-shrinkwrap.json` 文件，开发者需要在使用 shrinkwrap 前自行确认 node_modules 目录中的依赖都是有效的；shrinkwrap 总是据当前目录中的 node_modules 目录中的内容锁定依赖版本号
 
 ### cache
 
@@ -899,11 +899,11 @@ npm 将数据缓存在 `npm config get cache` 命令指定的路径中。
 
 当局部安装一个模块时，npm 会执行以下步骤：
 
-1. 检查缓存并检查缓存文件是否超过免检时间
-2. 如果存在合适的缓存文件且没有超过免检时间，执行步骤 6
-3. 获取该模块符合版本规则的最新版本
-4. 如果缓存中有最新版本，则执行步骤 6
-5. 下载该模块的最新版本，并将其载入缓存中
+1. 检查缓存中的模块信息文件（.cache.json，包括 ETag 等信息）是否存在并在免检时间内
+2. 如果存在合适的缓存信息文件且没有超过免检时间，执行步骤 6
+3. 获取该模块的最新信息文件，然后计算出合适的模块版本号
+4. 如果缓存中有该版本号的模块，则执行步骤 6
+5. 下载该版本号的模块，并将其载入缓存中
 6. 取缓存中的文件，并将其安装至目标路径中
 
 `npm cache` 命令的用法：
